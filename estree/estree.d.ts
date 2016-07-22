@@ -3,8 +3,115 @@
 // Definitions by: RReverser <https://github.com/RReverser>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-declare namespace ESTree2 {
-  interface Node extends SourceLocation {
+// https://github.com/estree/estree/blob/master/es6.md#classdeclaration
+declare namespace ESTreeUnion {
+
+  type Class = ClassDeclaration | ClassExpression;
+
+  type Function = ArrowFunctionExpression
+  | FunctionDeclaration
+  | FunctionExpression;
+
+  type Expression = ArrayExpression
+  | ArrayPattern
+  | ArrowFunctionExpression
+  | AssignmentExpression
+  | AssignmentPattern
+  | BinaryExpression
+  | CallExpression
+  | ClassExpression
+  | ConditionalExpression
+  | FunctionExpression
+  | Identifier
+  | Identifier
+  | Literal
+  | LogicalExpression
+  | MemberExpression
+  | MemberExpression
+  | MetaProperty
+  | NewExpression
+  | ObjectExpression
+  | ObjectPattern
+  | RegExpLiteral
+  | RestElement
+  | SequenceExpression
+  | TaggedTemplateExpression
+  | TemplateLiteral
+  | ThisExpression
+  | UnaryExpression
+  | UpdateExpression
+  | YieldExpression;
+
+  type Property = SimpleProperty | AssignmentProperty
+
+  type ModuleDeclaration = ExportAllDeclaration
+  | ExportDefaultDeclaration
+  | ExportNamedDeclaration
+  | ImportDeclaration;
+
+  type ModuleSpecifier = ImportSpecifier
+  | ExportSpecifier
+  | ImportDefaultSpecifier
+  | ImportNamespaceSpecifier;
+
+  type Declaration = ClassDeclaration
+  | ExportAllDeclaration
+  | ExportDefaultDeclaration
+  | ExportNamedDeclaration
+  | FunctionDeclaration
+  | ImportDeclaration
+  | ModuleDeclaration
+  | VariableDeclaration;
+
+  type Statement = Declaration
+  | BlockStatement
+  | BreakStatement
+  | ContinueStatement
+  | DebuggerStatement
+  | DoWhileStatement
+  | EmptyStatement
+  | ExpressionStatement
+  | ForInStatement
+  | ForOfStatement
+  | ForStatement
+  | IfStatement
+  | LabeledStatement
+  | ReturnStatement
+  | SwitchStatement
+  | ThrowStatement
+  | TryStatement
+  | WhileStatement
+  | WithStatement;
+
+  type Pattern = ArrayPattern
+  | AssignmentPattern
+  | Identifier
+  | MemberExpression
+  | ObjectPattern
+  | RestElement;
+
+  type Node = Expression
+  | Declaration
+  | Statement
+  | Pattern
+  | Property
+  | SpreadElement
+  | CatchClause
+  | Class
+  | ClassBody
+  | ModuleDeclaration
+  | ModuleSpecifier
+  | Function
+  | MetaProperty
+  | MethodDefinition
+  | Program
+  | Super
+  | SwitchCase
+  | TemplateElement
+  | TemplateLiteral
+  | VariableDeclarator;
+
+  interface BaseNode extends SourceLocation {
     type: string;
     // loc?: SourceLocation;
     range?: [number, number];
@@ -21,133 +128,98 @@ declare namespace ESTree2 {
     column: number;
   }
 
-  interface Program extends Node {
+  interface Program extends BaseNode {
     type: "Program"
-    body: Array<Statement | ModuleDeclaration | ClassDeclaration>;
+    body: Array<Statement | ModuleDeclaration>;
     sourceType: string;
   }
 
-  interface Function extends Node {
-    type: "ArrowFunctionExpression"
-    | "FunctionDeclaration"
-    | "FunctionExpression"
-    | "FunctionExpression";
+  interface BaseFunction {
     id?: Identifier;
     params: Array<Pattern>;
     body: BlockStatement | Expression;
     generator: boolean;
   }
 
-  interface Statement extends Node {
-    type: "BlockStatement"
-    | "BreakStatement"
-    | "ClassDeclaration"
-    | "ContinueStatement"
-    | "DebuggerStatement"
-    | "Declaration"
-    | "DoWhileStatement"
-    | "EmptyStatement"
-    | "ExportAllDeclaration"
-    | "ExportDefaultDeclaration"
-    | "ExportNamedDeclaration"
-    | "ExpressionStatement"
-    | "ForInStatement"
-    | "ForOfStatement"
-    | "ForStatement"
-    | "FunctionDeclaration"
-    | "IfStatement"
-    | "ImportDeclaration"
-    | "LabeledStatement"
-    | "ModuleDeclaration"
-    | "ReturnStatement"
-    | "Statement"
-    | "SwitchStatement"
-    | "ThrowStatement"
-    | "TryStatement"
-    | "VariableDeclaration"
-    | "WhileStatement"
-    | "WithStatement";
-  }
-
-  interface EmptyStatement extends Statement {
+  interface EmptyStatement extends BaseNode {
     type: "EmptyStatement"
   }
 
-  interface BlockStatement extends Statement {
+  interface BlockStatement extends BaseNode {
     type: "BlockStatement"
     body: Array<Statement>;
   }
 
-  interface ExpressionStatement extends Statement {
+  interface ExpressionStatement extends BaseNode {
     type: "ExpressionStatement"
     expression: Expression;
   }
 
-  interface IfStatement extends Statement {
+  interface IfStatement extends BaseNode {
     type: "IfStatement"
     test: Expression;
     consequent: Statement;
     alternate?: Statement;
   }
 
-  interface LabeledStatement extends Statement {
+  interface LabeledStatement extends BaseNode {
     type: "LabeledStatement"
     label: Identifier;
     body: Statement;
   }
 
-  interface BreakStatement extends Statement {
+  interface BreakStatement extends BaseNode {
     type: "BreakStatement"
     label?: Identifier;
   }
 
-  interface ContinueStatement extends Statement {
+  interface ContinueStatement extends BaseNode {
     type: "ContinueStatement"
     label?: Identifier;
   }
 
-  interface WithStatement extends Statement {
+  interface WithStatement extends BaseNode {
     type: "WithStatement"
     object: Expression;
     body: Statement;
   }
 
-  interface SwitchStatement extends Statement {
+  interface SwitchStatement extends BaseNode {
     type: "SwitchStatement"
     discriminant: Expression;
     cases: Array<SwitchCase>;
   }
 
-  interface ReturnStatement extends Statement {
+  interface ReturnStatement extends BaseNode {
     type: "ReturnStatement"
     argument?: Expression;
   }
 
-  interface ThrowStatement extends Statement {
+  interface ThrowStatement extends BaseNode {
     type: "ThrowStatement"
     argument: Expression;
   }
 
-  interface TryStatement extends Statement {
+  interface TryStatement extends BaseNode {
     type: "TryStatement"
     block: BlockStatement;
     handler?: CatchClause;
     finalizer?: BlockStatement;
   }
 
-  interface WhileStatement extends Statement {
+  interface WhileStatement extends BaseNode {
     type: "WhileStatement"
     test: Expression;
     body: Statement;
   }
 
-  interface DoWhileStatement extends Statement {
+  interface DoWhileStatement extends BaseNode {
     type: "DoWhileStatement"
     body: Statement;
     test: Expression;
   }
 
-  interface ForStatement extends Statement {
+  interface ForStatement extends BaseNode {
     type: "ForStatement"
     init?: VariableDeclaration | Expression;
     test?: Expression;
@@ -155,255 +227,228 @@ declare namespace ESTree2 {
     body: Statement;
   }
 
-  interface ForInStatement extends Statement {
-    type: "ForInStatement" | "ForOfStatement"
+  interface ForInStatement extends BaseNode {
+    type: "ForInStatement"
     left: VariableDeclaration | Expression;
     right: Expression;
     body: Statement;
   }
 
-  interface DebuggerStatement extends Statement {
+  interface DebuggerStatement extends BaseNode {
     type: "DebuggerStatement"
   }
 
-  interface Declaration extends Statement {
-    type: "ClassDeclaration"
-    | "Declaration"
-    | "ExportAllDeclaration"
-    | "ExportDefaultDeclaration"
-    | "ExportNamedDeclaration"
-    | "FunctionDeclaration"
-    | "ImportDeclaration"
-    | "ModuleDeclaration"
-    | "VariableDeclaration";
-  }
-
-  interface FunctionDeclaration extends Function, Declaration {
+  interface FunctionDeclaration extends BaseNode, BaseFunction {
     type: "FunctionDeclaration"
     id: Identifier;
   }
 
-  interface VariableDeclaration extends Declaration {
+  interface VariableDeclaration extends BaseNode {
     type: "VariableDeclaration"
     declarations: Array<VariableDeclarator>;
     kind: string;
   }
 
-  interface VariableDeclarator extends Node {
+  interface VariableDeclarator extends BaseNode {
     type: "VariableDeclarator"
     id: Pattern;
     init?: Expression;
   }
 
-  interface Expression extends Node {
-    type: "ArrayExpression"
-    | "ArrayPattern"
-    | "ArrowFunctionExpression"
-    | "AssignmentExpression"
-    | "AssignmentPattern"
-    | "BinaryExpression"
-    | "CallExpression"
-    | "ClassExpression"
-    | "ConditionalExpression"
-    | "FunctionExpression"
-    | "Identifier"
-    | "Identifier"
-    | "Literal"
-    | "LogicalExpression"
-    | "MemberExpression"
-    | "MemberExpression"
-    | "MetaProperty"
-    | "NewExpression"
-    | "ObjectExpression"
-    | "ObjectPattern"
-    | "RegExpLiteral"
-    | "RestElement"
-    | "SequenceExpression"
-    | "TaggedTemplateExpression"
-    | "TemplateLiteral"
-    | "ThisExpression"
-    | "UnaryExpression"
-    | "UpdateExpression"
-    | "YieldExpression";
-  }
-
-  interface ThisExpression extends Expression {
+  interface ThisExpression extends BaseNode {
     type: "ThisExpression"
   }
 
-  interface ArrayExpression extends Expression {
+  interface ArrayExpression extends BaseNode {
     type: "ArrayExpression"
     elements: Array<Expression | SpreadElement>;
   }
 
-  interface ObjectExpression extends Expression {
+  interface ObjectExpression extends BaseNode {
     type: "ObjectExpression"
     properties: Array<Property>;
   }
 
-  interface Property extends Node {
-    type: "Property" | "AssignmentProperty"
+  interface BaseProperty {
     key: Expression;
     value: Expression;
-    kind: string;
+    kind?: string;
     method: boolean;
     shorthand: boolean;
     computed: boolean;
   }
 
-  interface FunctionExpression extends Function, Expression {
-    type: "FunctionExpression"
+  // Deviates from spec.
+  interface SimpleProperty extends BaseNode, BaseProperty {
+    type: "Property"
+    kind: undefined
   }
 
-  interface SequenceExpression extends Expression {
+  interface FunctionExpression extends BaseNode, BaseFunction {
+    type: "FunctionExpression"
+    expression?: boolean // acorn adds an `expression: false`
+  }
+
+  interface SequenceExpression extends BaseNode {
     type: "SequenceExpression"
     expressions: Array<Expression>;
   }
 
-  interface UnaryExpression extends Expression {
+  interface UnaryExpression extends BaseNode {
     type: "UnaryExpression"
     operator: UnaryOperator;
     prefix: boolean;
     argument: Expression;
   }
 
-  interface BinaryExpression extends Expression {
+  interface BinaryExpression extends BaseNode {
     type: "BinaryExpression"
     operator: BinaryOperator;
     left: Expression;
     right: Expression;
   }
 
-  interface AssignmentExpression extends Expression {
+  interface AssignmentExpression extends BaseNode {
     type: "AssignmentExpression"
     operator: AssignmentOperator;
     left: Pattern | MemberExpression;
     right: Expression;
   }
 
-  interface UpdateExpression extends Expression {
+  interface UpdateExpression extends BaseNode {
     type: "UpdateExpression"
     operator: UpdateOperator;
     argument: Expression;
     prefix: boolean;
   }
 
-  interface LogicalExpression extends Expression {
+  interface LogicalExpression extends BaseNode {
     type: "LogicalExpression"
     operator: LogicalOperator;
     left: Expression;
     right: Expression;
   }
 
-  interface ConditionalExpression extends Expression {
+  interface ConditionalExpression extends BaseNode {
     type: "ConditionalExpression"
     test: Expression;
     alternate: Expression;
     consequent: Expression;
   }
 
-  interface CallExpression extends Expression {
+  interface BaseCallExpression {
     callee: Expression | Super;
     arguments: Array<Expression | SpreadElement>;
   }
 
-  interface NewExpression extends CallExpression {
+  interface CallExpression extends BaseNode, BaseCallExpression {
+    type: "CallExpression"
+    callee: Expression | Super;
+    arguments: Array<Expression | SpreadElement>;
+  }
+
+  interface NewExpression extends BaseNode, BaseCallExpression {
     type: "NewExpression"
   }
 
-  interface MemberExpression extends Expression, Pattern {
+  interface MemberExpression extends BaseNode {
     type: "MemberExpression"
     object: Expression | Super;
     property: Expression;
     computed: boolean;
   }
 
-  interface Pattern extends Node {
-    type: "ArrayPattern"
-    | "AssignmentPattern"
-    | "Identifier"
-    | "MemberExpression"
-    | "ObjectPattern"
-    | "RestElement";
-  }
-
-  interface SwitchCase extends Node {
+  interface SwitchCase extends BaseNode {
     type: "SwitchCase"
     test?: Expression;
     consequent: Array<Statement>;
   }
 
-  interface CatchClause extends Node {
+  interface CatchClause extends BaseNode {
     type: "CatchClause"
     param: Pattern;
     body: BlockStatement;
   }
 
-  interface Identifier extends Node, Expression, Pattern {
+  interface Identifier extends BaseNode {
     type: "Identifier"
     name: string;
   }
 
-  interface Literal extends Node, Expression {
-    type: "Literal" | "RegExpLiteral"
-    value?: string | boolean | number | RegExp;
+  interface Literal extends BaseNode {
+    type: "Literal"
+    value: string | boolean | number;
+    raw?: string; // acorn for boolean literal at least?
   }
 
-  interface RegExpLiteral extends Literal {
+  interface RegExpLiteral extends BaseNode {
     type: "RegExpLiteral"
+    value: RegExp;
     regex: {
       pattern: string;
       flags: string;
     };
   }
 
-  type UnaryOperator = string;
+  type UnaryOperator = "-" | "+" | "!" | "~" | "typeof" | "void" | "delete";
 
-  type BinaryOperator = string;
+  type BinaryOperator = "==" | "!=" | "===" | "!=="
+  | "<" | "<=" | ">" | ">="
+  | "<<" | ">>" | ">>>"
+  | "+" | "-" | "*" | "/" | "%"
+  | "|" | "^" | "&" | "in"
+  | "instanceof"
+  | "**";
 
-  type LogicalOperator = string;
+  type LogicalOperator = "||" | "&&";
 
-  type AssignmentOperator = string;
+  type AssignmentOperator = "=" | "+=" | "-=" | "*=" | "/=" | "%="
+  | "<<=" | ">>=" | ">>>="
+  | "|=" | "^=" | "&="
+  | "**=";
 
-  type UpdateOperator = string;
+  type UpdateOperator = "++" | "--";
 
-  interface ForOfStatement extends ForInStatement {
+  interface ForOfStatement extends BaseNode {
     type: "ForOfStatement"
+    left: VariableDeclaration | Expression;
+    right: Expression;
+    body: Statement;
   }
 
-  interface Super extends Node {
+  interface Super extends BaseNode {
     type: "Super"
   }
 
-  interface SpreadElement extends Node {
+  interface SpreadElement extends BaseNode {
     type: "SpreadElement"
     argument: Expression;
   }
 
-  interface ArrowFunctionExpression extends Function, Expression {
+  interface ArrowFunctionExpression extends BaseNode, BaseFunction {
     type: "ArrowFunctionExpression"
     expression: boolean;
   }
 
-  interface YieldExpression extends Expression {
+  interface YieldExpression extends BaseNode {
     type: "YieldExpression"
     argument?: Expression;
     delegate: boolean;
   }
 
-  interface TemplateLiteral extends Expression {
+  interface TemplateLiteral extends BaseNode {
     type: "TemplateLiteral"
     quasis: Array<TemplateElement>;
     expressions: Array<Expression>;
   }
 
-  interface TaggedTemplateExpression extends Expression {
+  interface TaggedTemplateExpression extends BaseNode {
     type: "TaggedTemplateExpression"
     tag: Expression;
     quasi: TemplateLiteral;
   }
 
-  interface TemplateElement extends Node {
+  interface TemplateElement extends BaseNode {
     type: "TemplateElement"
     tail: boolean;
     value: {
@@ -412,47 +457,40 @@ declare namespace ESTree2 {
     };
   }
 
-  interface AssignmentProperty extends Property {
-    type: "AssignmentProperty"
+  interface AssignmentProperty extends BaseNode, BaseProperty {
+    type: "Property"
     value: Pattern;
-    kind: string;
+    kind: "init";
     method: boolean;
   }
 
-  interface ObjectPattern extends Pattern {
+  interface ObjectPattern extends BaseNode {
     type: "ObjectPattern"
     properties: Array<AssignmentProperty>;
   }
 
-  interface ArrayPattern extends Pattern {
+  interface ArrayPattern extends BaseNode {
     type: "ArrayPattern"
     elements: Array<Pattern>;
   }
 
-  interface RestElement extends Pattern {
+  interface RestElement extends BaseNode {
     type: "RestElement"
     argument: Pattern;
   }
 
-  interface AssignmentPattern extends Pattern {
+  interface AssignmentPattern extends BaseNode {
     type: "AssignmentPattern"
     left: Pattern;
     right: Expression;
   }
 
-  interface Class extends Node {
-    type: "ClassDeclaration" | "ClassExpression"
-    id?: Identifier;
-    superClass: Expression;
-    body: ClassBody;
-  }
-
-  interface ClassBody extends Node {
+  interface ClassBody extends BaseNode {
     type: "ClassBody"
     body: Array<MethodDefinition>;
   }
 
-  interface MethodDefinition extends Node {
+  interface MethodDefinition extends BaseNode {
     type: "MethodDefinition"
     key: Expression;
     value: FunctionExpression;
@@ -461,73 +499,66 @@ declare namespace ESTree2 {
     static: boolean;
   }
 
-  interface ClassDeclaration extends Class, Declaration {
+  interface ClassDeclaration extends BaseNode {
     type: "ClassDeclaration"
     id: Identifier;
+    superClass: Expression;
+    body: ClassBody;
   }
 
-  interface ClassExpression extends Class, Expression {
+  interface ClassExpression extends BaseNode {
     type: "ClassExpression"
+    superClass: Expression;
+    body: ClassBody;
   }
 
-  interface MetaProperty extends Expression {
+  interface MetaProperty extends BaseNode {
     type: "MetaProperty"
     meta: Identifier;
     property: Identifier;
   }
 
-  interface ModuleDeclaration extends Node {
-    type: "ExportAllDeclaration"
-    | "ExportDefaultDeclaration"
-    | "ExportNamedDeclaration"
-    | "ImportDeclaration";
-  }
-
-  interface ModuleSpecifier extends Node {
-    type: "ImportSpecifier"
-    | "ExportSpecifier"
-    | "ImportDefaultSpecifier"
-    | "ImportNamespaceSpecifier";
+  interface BaseModuleSpecifier {
     local: Identifier;
   }
 
-  interface ImportDeclaration extends ModuleDeclaration {
+  interface ImportDeclaration extends BaseNode {
     type: "ImportDeclaration"
     specifiers: Array<ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier>;
     source: Literal;
   }
 
-  interface ImportSpecifier extends ModuleSpecifier {
+  interface ImportSpecifier extends BaseNode, BaseModuleSpecifier {
     type: "ImportSpecifier"
     imported: Identifier;
   }
 
-  interface ImportDefaultSpecifier extends ModuleSpecifier {
+  interface ImportDefaultSpecifier extends BaseNode, BaseModuleSpecifier {
     type: "ImportDefaultSpecifier"
   }
 
-  interface ImportNamespaceSpecifier extends ModuleSpecifier {
+  interface ImportNamespaceSpecifier extends BaseNode, BaseModuleSpecifier {
     type: "ImportNamespaceSpecifier"
   }
 
-  interface ExportNamedDeclaration extends ModuleDeclaration {
+  interface ExportNamedDeclaration extends BaseNode {
     type: "ExportNamedDeclaration"
     declaration?: Declaration;
     specifiers: Array<ExportSpecifier>;
     source?: Literal;
   }
 
-  interface ExportSpecifier extends ModuleSpecifier {
+  interface ExportSpecifier extends BaseNode, BaseModuleSpecifier {
     type: "ExportSpecifier"
     exported: Identifier;
   }
 
-  interface ExportDefaultDeclaration extends ModuleDeclaration {
+  interface ExportDefaultDeclaration extends BaseNode {
     type: "ExportDefaultDeclaration"
     declaration: Declaration | Expression;
   }
 
-  interface ExportAllDeclaration extends ModuleDeclaration {
+  interface ExportAllDeclaration extends BaseNode {
     type: "ExportAllDeclaration"
     source: Literal;
   }
